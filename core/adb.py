@@ -13,7 +13,7 @@ class ADB:
     def adb_exec(self, commands_array):
         """This function return the output of the command 'adb commands_array[0] commands_array[1] ...'"""
 
-        if not self.device_id :
+        if not self.device_id:
             commands_array.insert(0, self.adb_path)
             result = run(commands_array,
                          stdout=PIPE, stderr=PIPE, check=True,
@@ -159,4 +159,4 @@ class ADB:
 
     def revoke_perm_pkg(self, package_name, permission):
         """This function revoke 'permission', given as parameter, for the package package_name"""
-        self.adb_exec(["shell", "pm", "revoke", package_name, permission])
+        self.adb_exec(["shell", "pm", "revoke", "--user", "0", package_name, permission])

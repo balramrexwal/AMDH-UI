@@ -15,13 +15,15 @@
             <th class="p-3 mb-2 bg-gradient-dark text-white" scope="col">#</th>
             <th scope="col p-3 mb-2  text-white" ><center>Package</center></th>
             <th scope="col p-3 mb-2  text-white" ><center>Admin check</center></th>
+            <th scope="col p-3 mb-2  text-white" ><center>Malware Permissions</center></th>
+            <th scope="col p-3 mb-2  text-white" ><center>Malware Score</center></th>
         </tr>
         </thead>
         <tbody>
         {% for package in packages.keys() %}
-        <tr>
-            {% if packages[package]['dangerous']|length != 0 %}<tr class="bg-danger">{% else %} <tr>{% endif %}
-            <th class="p-3 mb-2 bg-gradient-dark text-gray-400" scope="row">  {{ loop.index }}</th>
+        {% if packages[package]['dangerous']|length != 0 %}<tr class="bg-danger">{% else %} <tr>{% endif %}
+
+            <td class="p-3 mb-2 bg-gradient-dark text-gray-400" scope="row">  {{ loop.index }}</td>
 
             <td class="p-3 mb-2" ><a class="text-gray-400" href="/application/{{ device }}/{{ app_type }}/{{ show }}/{{ package }}">{{ package }}</a> </td>
             {% if packages[package]['isAdmin'] == True %}
@@ -32,7 +34,21 @@
 
             <td class="p-3 mb-2" ><a class="btn btn-success btn-circle text-gray-900">None</a></td>
             {% endif %}
+            <td class="p-3 mb-2" >
+                {% if packages[package]['mal_confidence'] > 0 %}
+                <a class="btn btn-warning btn-circle text-gray-900"><i class="fas fa-exclamation-triangle"></i></a>
 
+                {% else %}
+                <a class="btn btn-success btn-circle text-gray-900"><i class="fas fa-check" ></i></a>
+                {% endif %}
+            </td>
+            <td>
+                {% if packages[package]['mal_score'] >= 0 %}
+                <a class="btn btn-success btn-circle text-gray-900"><i class="fas fa-check" ></i></a>
+                {% else %}
+                <a class="btn btn-warning btn-circle text-gray-900"><i class="fas fa-exclamation-triangle"></i></a>
+                {% endif %}
+            </td>
         </tr>
 
         {% endfor %}
@@ -93,7 +109,6 @@
         </div>
     </form>
     {% endif%}
-
 
 
 </div>

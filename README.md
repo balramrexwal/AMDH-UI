@@ -1,7 +1,5 @@
 # AMDH GUI
-Android Mobile Device Hardening GUI (version 0.1)
-
-
+Android Mobile Device Hardening GUI (version 1.0)
 
 
 ## Install and usage
@@ -50,3 +48,6 @@ You can access the UI on : [http://127.0.0.1:8880/](http://127.0.0.1:8880/)
 
 ## Used Template:
 [https://github.com/StartBootstrap/startbootstrap-sb-admin-2](https://github.com/StartBootstrap/startbootstrap-sb-admin-2)
+
+# Participate 
+Pull requests are welcome.
