@@ -5,38 +5,39 @@
 
 
 <div class="container" style="width:100%">
-    <form action="{{ url_for('app_action', app_type=app_type, show=show, device=device, package=package) }}" method="post">
-        <div class="jumbotron p-3 bg-gradient-dark text-white"  >
-
             <div class="col-md-12">
-                <div class="jumbotron text-center p-3">
-                    <h3> Package: {{ package }} </h3>
-                </div>
-                <div class="table-responsive">
-                    <table id="mytable" class="table table-bordred table-striped">
-                        <thead class=" bg-gradient-primary text-gray-400">
-                        <th><input type="checkbox" id="checkall" /></th>
-                        <th>Permission</th>
-                        <th>Description</th>
+            <div  class="jumbotron text-center p-3 bg-gradient-dark text-white">
+                <h3> Package: {{ package }} </h3>
+                <h5> Device : {{ device }}</h5>
+            </div>
+        </div>
+    <form action="{{ url_for('app_action', app_type=app_type, show=show, device=device, package=package) }}" method="post">
+        <div class="jumbotron p-3 bg-gradient-dark text-gray-900"  >
+            <div class="table-responsive">
+                <table id="mytable" class="table table-bordred table-striped">
+                    <thead class=" bg-gradient-primary text-gray-400">
+                    <th><input type="checkbox" id="checkall" /></th>
+                    <th>Permission</th>
+                    <th>Description</th>
 
-                        </thead>
-                        <tbody class=".bg-gradient-light text-gray-400">
+                    </thead>
+                    <tbody class=".bg-gradient-light text-gray-400">
 
-                        {% for key, value  in perms.items() %}
+                    {% for key, value  in perms.items() %}
 
-                        <tr>
-                            <td><input type="checkbox" name="{{ key }}" class="checkthis" /></td>
-                            <td>{{ key }}</td>
-                            <td>{% if value is mapping  %}{{ value['desc'] }} {% else %}{{ value }}{% endif %}</td>
+                    <tr>
+                        <td><input type="checkbox" name="{{ key }}" class="checkthis" /></td>
+                        <td>{{ key }}</td>
+                        <td>{% if value is mapping  %}{{ value['desc'] }} {% else %}{{ value }}{% endif %}</td>
 
-                        </tr>
-                        {% endfor %}
+                    </tr>
+                    {% endfor %}
 
-                        </tbody>
+                    </tbody>
 
-                    </table>
+                </table>
 
-                </div>
+
             </div>
         </div>
 
@@ -44,6 +45,8 @@
         <div class="col text-center">
             <button type="button"   data-title="Revoke" data-toggle="modal" name="action" value="revoke" data-target="#revoke_modal" class="btn btn-danger">Revoke selected</button>
             <button type="button"  data-title="Uninstall" data-toggle="modal" name="action" value="uninstall"  data-target="#uninstall_modal" class="btn btn-danger">Uninstall App</button>
+            {% if show == 'all_perms' %}<a href="/application/{{ device }}/{{ app_type }}/danger_perms/{{ package }}"  data-title="show" name="action" value="show"  class="btn btn-danger"> Show dangerous permissions Only </a>
+            {% else %} <a href="/application/{{ device }}/{{ app_type }}/all_perms/{{ package }}"  data-title="show" name="action" value="show"  class="btn btn-danger"> Show all permissions</a> {% endif %}
         </div>
 
         <div class="modal fade" id="revoke_modal" role="dialog" >

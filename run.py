@@ -29,6 +29,7 @@ def refresh_scan(device, app_type):
 
         dict_packages[package] = dict()
         dict_packages[package]["dangerous"] = dangerous_perms
+        dict_packages[package]["isAdmin"] = app.is_app_device_owner()
         dict_packages[package]["all_perms"] = perm_desc
 
     return dict_packages
@@ -87,7 +88,18 @@ def app_action(device, app_type, show, package):
         except Exception as e:
             # To-Do
             print(e)
+
+    elif 'action' in request.form.keys() and request.form['action'] == 'rm_admin':
+        try:
+            dumpsys_out = adb.dumpsys(["package", package])
+            perms_list = adb.get_req_perms_dumpsys_package(dumpsys_out)
+            app = App(adb, package)
+            app.remove_device_admin_for_app()
+        except Exception as e:
+            # To-Do
+            print(e)
     dict_packages = refresh_scan(device, app_type)
+
     return render_template('scan.html', scan="apps_scan", app_type=app_type, show=show, packages=dict_packages,
                            device=device)
 

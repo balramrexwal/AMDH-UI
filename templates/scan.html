@@ -13,7 +13,8 @@
         <thead class="thead-dark ">
         <tr class=".bg-primary">
             <th class="p-3 mb-2 bg-gradient-dark text-white" scope="col">#</th>
-            <th scope="col" ><center>Package</center></th>
+            <th scope="col p-3 mb-2  text-white" ><center>Package</center></th>
+            <th scope="col p-3 mb-2  text-white" ><center>Admin check</center></th>
         </tr>
         </thead>
         <tbody>
@@ -23,6 +24,15 @@
             <th class="p-3 mb-2 bg-gradient-dark text-gray-400" scope="row">  {{ loop.index }}</th>
 
             <td class="p-3 mb-2" ><a class="text-gray-400" href="/application/{{ device }}/{{ app_type }}/{{ show }}/{{ package }}">{{ package }}</a> </td>
+            {% if packages[package]['isAdmin'] == True %}
+            <form action="{{ url_for('app_action', app_type=app_type, show=show, device=device, package=package)}}" method="post">
+                <td class="p-3 mb-2" ><button type="submit" name="action" value="rm_admin" class="btn btn-danger btn-circle"><i class="fas fa-trash"></i></button></td>
+            </form>
+            {% else %}
+
+            <td class="p-3 mb-2" ><a class="btn btn-success btn-circle text-gray-900">None</a></td>
+            {% endif %}
+
         </tr>
 
         {% endfor %}
