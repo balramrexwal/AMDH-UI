@@ -159,4 +159,4 @@ class ADB:
 
     def revoke_perm_pkg(self, package_name, permission):
         """This function revoke 'permission', given as parameter, for the package package_name"""
-        self.adb_exec(["shell", "pm", "revoke", package_name, permission])
+        self.adb_exec(["shell", "pm", "revoke", "--user", "0", package_name, permission])
