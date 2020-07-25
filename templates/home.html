@@ -1,0 +1,81 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+
+<div  class="jumbotron text-center p-3 bg-gradient-dark text-white">
+    <h3> Android Mobile Device Hardening </h3>
+</div>
+
+<form action="{{ url_for('scan') }}" method="post" style="display: flex; justify-content: space-around">
+    <div class="jumbotron text-center border-bottom-primary border-primary   bg-gradient-dark p-5 bg-dark text-white ">
+        <div class="form-group" >
+            <label for="device">Device</label>
+            <select class="form-control text-center bg-gray-500 text-white" name="device" id="device">
+                {% for key in devices.keys()%}
+                <option value="{{ key }}">{{ key }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="row center " >
+            <div class="row" >
+                <div  class="card-body jumbotron animated--grow-in  bg-gradient-secondary  text-center p-3 text-white ml-1 mr-2" style=" background-color:#858796;">
+                    <div class="form-group">
+                        <label  id="scantype" >Scan type</label>
+                        <div class="input-group mb-3 " style="display: block;">
+                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                              <label class="btn btn-secondary">
+                                <input type="radio" name="scan" id="apps_scan" value="apps_scan" autocomplete="off" checked> Application
+                              </label>
+                              <label class="btn btn-secondary">
+                                <input type="radio" name="scan" id="settings_scan" value="settings_scan" autocomplete="off"> Settings
+                              </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row " >
+                <div  class="card-body animated--grow-in jumbotron  bg-gradient-secondary text-center p-3 text-white ml-4 mr-3" style="background-color:#858796;">
+                    <div class="form-group">
+                        <label>Applications</label>
+                            <select class="form-control btn-secondary dropdown" name="app" id="app">
+                                <option value="e">enabled (include system Apps)</option>
+                                <option value="d">disabled</option>
+                                <option value="3">third party</option>
+                                <option value="s">System</option>
+                            </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row" >
+                <div  class="card-body jumbotron  animated--grow-in bg-gradient-secondary text-center p-3 text-white ml-3" style=" background-color:#858796;">
+                    <div class="form-group">
+                        <label  id="show_perms" >Show</label>
+                        <div class="input-group mb-3 " style="display: block;">
+                            <div class="btn-group btn-group-toggle  bg-gradient-primary" data-toggle="buttons">
+                              <label class="btn btn-secondary">
+                                <input type="radio" name="show" value="danger_perms" autocomplete="off" checked> Dangerous Permissions
+                              </label>
+                              <label class="btn btn-secondary">
+                                <input type="radio" name="show" value="all_perms" autocomplete="off"> All permissions
+                              </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="form-group">
+        <div class="col text-center text-white-50 ">
+            <button type="submit" class="btn btn-success bg-gradient-primary text-white-50" >Start Scan</button>
+        </div>
+    </div>
+    </div>
+
+
+    </div>
+</form>
+
+
+{% endblock %}

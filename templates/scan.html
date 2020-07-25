@@ -1,0 +1,92 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+{% if scan == "apps_scan" %}
+<div  class="jumbotron text-center p-3 bg-gradient-dark text-white">
+    <h3> Packages List </h3>
+    <h5> Device : {{ device }}</h5>
+    <h6> {% if app_type == '3' %} Third party {% elif app_type == 'e' %} Enabled {% elif app_type == 'd' %} Disabled {% elif app_type == 's' %} System {% endif %} Apps</h6>
+</div>
+
+<div class="jumbotron text-center p-3 bg-gradient-dark text-white"  >
+    <table class="table bg-gradient-info" style="justify-content: space-around">
+        <thead class="thead-dark ">
+        <tr class=".bg-primary">
+            <th class="p-3 mb-2 bg-gradient-dark text-white" scope="col">#</th>
+            <th scope="col" ><center>Package</center></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for package in packages.keys() %}
+        <tr>
+            {% if packages[package]['dangerous']|length != 0 %}<tr class="bg-danger">{% else %} <tr>{% endif %}
+            <th class="p-3 mb-2 bg-gradient-dark text-gray-400" scope="row">  {{ loop.index }}</th>
+
+            <td class="p-3 mb-2" ><a class="text-gray-400" href="/application/{{ device }}/{{ app_type }}/{{ show }}/{{ package }}">{{ package }}</a> </td>
+        </tr>
+
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div  class="jumbotron text-center p-3 bg-gradient-dark text-white">
+    <h3> Settings List </h3>
+    <h5> Device : {{ device }}</h5>
+</div>
+<div class="jumbotron bg-gray-700 "  >
+    <table class="table" style="justify-content: space-around">
+        <thead class="thead-dark ">
+        <tr class="bg-primary">
+            <th class="p-3 mb-2 bg-gradient-dark text-white" scope="col">Section</th>
+            <th class="p-3 mb-2 bg-gray-600 text-white" scope="row" scope="col" ><center>Key</center></th>
+            <th  class="p-3 mb-2 bg-gray-600 text-white" scope="row" scope="col" ><center>Current</center></th>
+            <th class="p-3 mb-2 bg-gray-600 text-white" scope="row" scope="col" ><center>expected</center></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for key,value in global_result.items() %}
+
+        <tr>
+            <th class="p-3 mb-2 bg-gradient-dark text-white" scope="row">  global </th>
+            <th class="p-3 mb-2 bg-gray-400 text-gray-900" scope="row">  {{ key }} </th>
+            {% if value['current'] != value['expected'] %}
+            <th class="bg-warning " scope="row">
+                {% else %}
+            <th class="bg-success " scope="row"> {% endif %} {{ value['current'] }} </th>
+            <th  class="p-3 mb-2 bg-gray-400 text-gray-900" scope="row">  {{ value['expected'] }}</th>
+        </tr>
+
+
+        {% endfor %}
+        {% for key,value in secure_result.items() %}
+
+        <tr>
+            <th class="p-3 mb-2 bg-gradient-dark text-white" scope="row">  secure </th>
+            <th class="p-3 mb-2 bg-gray-400 text-gray-900"scope="row">  {{ key }} </th>
+            {% if value['current'] != value['expected'] %}
+            <th class="p-3 mb-2 text-gray-900 bg-warning " scope="row">
+                {% else %}
+            <th class="p-3 mb-2 text-gray-900 bg-success " scope="row"> {% endif %} {{ value['current'] }} </th>
+            <th  class="p-3 mb-2 bg-gray-400 text-gray-900" scope="row">  {{ value['expected'] }}</th>
+        </tr>
+
+
+        {% endfor %}
+        </tbody>
+    </table>
+    <form action="{{ url_for('harden_settings', device=device) }}" method="post">
+        <div class="form-group">
+            <div class="col text-center text-white-50 ">
+                <button type="submit"  value="harden" class="btn btn-success text-gray-900" >Harden</button>
+            </div>
+        </div>
+    </form>
+    {% endif%}
+
+
+
+</div>
+
+
+{% endblock %}
