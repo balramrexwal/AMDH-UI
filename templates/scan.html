@@ -1,6 +1,7 @@
 {% extends 'layout.html' %}
 
 {% block body %}
+
 {% if scan == "apps_scan" %}
 <div  class="jumbotron text-center p-3 bg-gradient-dark text-white">
     <h3> Packages List </h3>
@@ -8,60 +9,110 @@
     <h6> {% if app_type == '3' %} Third party {% elif app_type == 'e' %} Enabled {% elif app_type == 'd' %} Disabled {% elif app_type == 's' %} System {% endif %} Apps</h6>
 </div>
 
-<div class="jumbotron text-center p-3 bg-gradient-dark text-white"  >
-    <table class="table bg-gradient-info" style="justify-content: space-around">
-        <thead class="thead-dark ">
-        <tr class=".bg-primary">
-            <th class="p-3 mb-2 bg-gradient-dark text-white" scope="col">#</th>
-            <th scope="col p-3 mb-2  text-white" ><center>Package</center></th>
-            <th scope="col p-3 mb-2  text-white" ><center>Admin check</center></th>
-            <th scope="col p-3 mb-2  text-white" ><center>Malware Permissions</center></th>
-            <th scope="col p-3 mb-2  text-white" ><center>Malware Score</center></th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for package in packages.keys() %}
-        {% if packages[package]['dangerous']|length != 0 %}<tr class="bg-danger">{% else %} <tr>{% endif %}
+<form id="apps" action="{{ url_for('apps_action', app_type=app_type, show=show, device=device, package=package) }}" method="post">
+    <div class="table-responsive jumbotron p-3 bg-gradient-dark text-white">
 
-            <td class="p-3 mb-2 bg-gradient-dark text-gray-400" scope="row">  {{ loop.index }}</td>
+        <div class="shadow mb-6 bg-gradient-dark">
+            <div class="dataTables_wrapper dt-bootstrap4">
+                <table id="scan_table" class="table table-fluid bg-gradient-info table-border display" style="justify-content: space-around">
+                    <thead class="thead-dark ">
+                    <tr class=".bg-primary">
+                        <th class="p-3 mb-2 bg-gradient-dark text-white" scope="col">#</th>
+                        <th><input type="checkbox" id="checkall" /></th>
+                        <th scope="col p-3 mb-2  text-white" ><center>Package</center></th>
+                        <th scope="col p-3 mb-2  text-white" ><center>Admin check</center></th>
+                        <th scope="col p-3 mb-2  text-white" ><center>Malware Permissions</center></th>
+                        <th scope="col p-3 mb-2  text-white" ><center>Malware Score</center></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for package in packages.keys() %}
+                    {% if packages[package]['dangerous']|length != 0 %}<tr class="bg-danger">{% else %} <tr>{% endif %}
 
-            <td class="p-3 mb-2" ><a class="text-gray-400" href="/application/{{ device }}/{{ app_type }}/{{ show }}/{{ package }}">{{ package }}</a> </td>
-            {% if packages[package]['isAdmin'] == True %}
-            <form action="{{ url_for('app_action', app_type=app_type, show=show, device=device, package=package)}}" method="post">
-                <td class="p-3 mb-2" ><button type="submit" name="action" value="rm_admin" class="btn btn-danger btn-circle"><i class="fas fa-trash"></i></button></td>
-            </form>
-            {% else %}
+                        <td class="p-3 mb-2 bg-gradient-dark text-gray-400" scope="row">  {{ loop.index }}</td>
+                        <td><input type="checkbox" name="{{ package }}" class="checkthis" /></td>
 
-            <td class="p-3 mb-2" ><a class="btn btn-success btn-circle text-gray-900">None</a></td>
-            {% endif %}
-            <td class="p-3 mb-2" >
-                {% if packages[package]['mal_confidence'] > 0 %}
-                <a class="btn btn-warning btn-circle text-gray-900"><i class="fas fa-exclamation-triangle"></i></a>
+                        <td class="p-3 mb-2" ><a class="text-gray-400" href="/application/{{ device }}/{{ app_type }}/{{ show }}/{{ package }}">{{ package }}</a> </td>
+                        {% if packages[package]['isAdmin'] == True %}
+                            <td class="p-3 mb-2 text-center" ><a class="btn btn-warning btn-circle text-gray-900"><i class="fas fa-exclamation-triangle"><div style="display:none;">{{ packages[package]['isAdmin'] }}</div></i></a></td>
+                        {% else %}
 
-                {% else %}
-                <a class="btn btn-success btn-circle text-gray-900"><i class="fas fa-check" ></i></a>
-                {% endif %}
-            </td>
-            <td>
-                {% if packages[package]['mal_score'] >= 0 %}
-                <a class="btn btn-success btn-circle text-gray-900"><i class="fas fa-check" ></i></a>
-                {% else %}
-                <a class="btn btn-warning btn-circle text-gray-900"><i class="fas fa-exclamation-triangle"></i></a>
-                {% endif %}
-            </td>
-        </tr>
+                        <td class="p-3 mb-2 text-center" ><a class="btn btn-success btn-circle text-gray-900"><i class="fas fa-check" ></i></a></td>
+                        {% endif %}
+                        <td class="p-3 mb-2 text-center" >
+                            {% if packages[package]['mal_confidence'] > 0 %}
+                            <a class="btn btn-warning btn-circle text-gray-900"><i class="fas fa-exclamation-triangle"><div style="display:none;">{{ packages[package]['mal_confidence'] }}</div></i></a>
 
-        {% endfor %}
-        </tbody>
-    </table>
-</div>
+                            {% else %}
+                            <a class="btn btn-success btn-circle text-gray-900"><i class="fas fa-check" ><div style="display:none;">{{ packages[package]['mal_confidence'] }}</div></i></a>
+                            {% endif %}
+                        </td>
+                        <td class="p-3 mb-2 text-center" >
+                            {% if packages[package]['mal_score'] >= 0 %}
+                            <a class="btn btn-success btn-circle text-gray-900"><i class="fas fa-check" ><div style="display:none;">{{ packages[package]['mal_score'] }}</div></i></a>
+                            {% else %}
+                            <a class="btn btn-warning btn-circle text-gray-900"><i class="fas fa-exclamation-triangle"><div style="display:none;">{{ packages[package]['mal_score'] }}</div></i></a>
+                            {% endif %}
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col text-center">
+            <button type="button"  data-title="Uninstall Selected Apps" data-toggle="modal" name="action" value="uninstall"  data-target="#uninstall_modal" class="btn btn-danger">Uninstall Selected Apps</button>
+            <button type="button"  data-title="Revoke admins for Selected Apps" data-toggle="modal" name="action" value="rm_admin"  data-target="#rm_admin_modal" class="btn btn-danger">Remove admins for Selected Apps</button>
+        </div>
+    </div>
+    <div class="modal fade" id="uninstall_modal" role="dialog" >
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title " id="uninstall_modal_title"> <div class=" text-center">Uninstall</div></h4>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-danger"><span class="glyphicon glyphicon-warning-sign"></span> Are you sure you want to uninstall the selected applications?</div>
+
+                </div>
+                <div class="modal-footer ">
+                    <button type="submit" name="action" value="uninstall" class="btn btn-success" > Yes </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal"> No </button>
+                </div>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+    </div>
+    <div class="modal fade" id="rm_admin_modal" role="dialog" >
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title " id="rm_admin_modal_title"> <div class=" text-center">Remove Admins Receivers</div></h4>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-danger"><span class="glyphicon glyphicon-warning-sign"></span> Are you sure you want to remove admins for the selected applications?</div>
+
+                </div>
+                <div class="modal-footer ">
+                    <button type="submit"  name="action" value="rm_admin" class="btn btn-success" > Yes </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal"> No </button>
+                </div>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+    </div>
+</form>
+
 {% else %}
 <div  class="jumbotron text-center p-3 bg-gradient-dark text-white">
     <h3> Settings List </h3>
     <h5> Device : {{ device }}</h5>
 </div>
-<div class="jumbotron bg-gray-700 "  >
-    <table class="table" style="justify-content: space-around">
+<div class="jumbotron bg-gray-700 dataTables_wrapper dt-bootstrap4"  >
+    <table class="table table-striped table-bordered dataTable" style="justify-content: space-around">
         <thead class="thead-dark ">
         <tr class="bg-primary">
             <th class="p-3 mb-2 bg-gradient-dark text-white" scope="col">Section</th>
@@ -109,9 +160,5 @@
         </div>
     </form>
     {% endif%}
-
-
 </div>
-
-
 {% endblock %}

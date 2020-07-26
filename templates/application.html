@@ -4,89 +4,85 @@
 
 
 
-<div class="container" style="width:100%">
-            <div class="col-md-12">
-            <div  class="jumbotron text-center p-3 bg-gradient-dark text-white">
-                <h3> Package: {{ package }} </h3>
-                <h5> Device : {{ device }}</h5>
-            </div>
-        </div>
-    <form action="{{ url_for('app_action', app_type=app_type, show=show, device=device, package=package) }}" method="post">
-        <div class="jumbotron p-3 bg-gradient-dark text-gray-900"  >
-            <div class="table-responsive">
-                <table id="mytable" class="table table-bordred table-striped">
-                    <thead class=" bg-gradient-primary text-gray-400">
-                    <th><input type="checkbox" id="checkall" /></th>
-                    <th>Permission</th>
-                    <th>Description</th>
+<div  class="jumbotron text-center p-3 bg-gradient-dark text-white">
 
+    <h3> Package: {{ package }} </h3>
+    <h5> Device : {{ device }}</h5>
+
+</div>
+<form action="{{ url_for('app_action', app_type=app_type, show=show, device=device, package=package) }}" method="post">
+    <div class="table-responsive jumbotron p-3 bg-gradient-dark text-white">
+
+        <div class="shadow mb-6 bg-gradient-dark">
+            <div class="dataTables_wrapper dt-bootstrap4">
+                <table id="scan_table" class="table table-fluid bg-gradient-info table-border display" style="justify-content: space-around">
+                    <thead class=" thead-dark ">
+                    <tr class=".bg-primary">
+                        <th><input type="checkbox" id="checkall" /></th>
+                        <th>Permission</th>
+                        <th>Description</th>
+                    </tr>
                     </thead>
-                    <tbody class=".bg-gradient-light text-gray-400">
-
+                    <tbody class=" text-white">
                     {% for key, value  in perms.items() %}
-
                     <tr>
                         <td><input type="checkbox" name="{{ key }}" class="checkthis" /></td>
                         <td>{{ key }}</td>
                         <td>{% if value is mapping  %}{{ value['desc'] }} {% else %}{{ value }}{% endif %}</td>
-
                     </tr>
                     {% endfor %}
-
                     </tbody>
-
                 </table>
-
-
-            </div>
-        </div>
-
-
-        <div class="col text-center">
-            <button type="button"   data-title="Revoke" data-toggle="modal" name="action" value="revoke" data-target="#revoke_modal" class="btn btn-danger">Revoke selected</button>
-            <button type="button"  data-title="Uninstall" data-toggle="modal" name="action" value="uninstall"  data-target="#uninstall_modal" class="btn btn-danger">Uninstall App</button>
-            {% if show == 'all_perms' %}<a href="/application/{{ device }}/{{ app_type }}/danger_perms/{{ package }}"  data-title="show" name="action" value="show"  class="btn btn-danger"> Show dangerous permissions Only </a>
-            {% else %} <a href="/application/{{ device }}/{{ app_type }}/all_perms/{{ package }}"  data-title="show" name="action" value="show"  class="btn btn-danger"> Show all permissions</a> {% endif %}
-        </div>
-
-        <div class="modal fade" id="revoke_modal" role="dialog" >
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title " id="revoke_modal_title"> <div class=" text-center">Revoke selected permissions</div></h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="alert alert-danger"><span class="glyphicon glyphicon-warning-sign"></span> Are you sure you want to revoke selected permissions?</div>
-
-                    </div>
-                    <div class="modal-footer ">
-                        <button type="submit"  name="action" value="revoke"  class="btn btn-success" > Yes </button>
-                        <button type="button" class="btn btn-default" data-dismiss="modal"> No </button>
-                    </div>
+                <div class="col text-center">
+                    <button type="button"   data-title="Revoke" data-toggle="modal" name="action" value="revoke" data-target="#revoke_modal" class="btn btn-danger">Revoke selected</button>
+                    <button type="button"  data-title="Uninstall" data-toggle="modal" name="action" value="uninstall"  data-target="#uninstall_modal" class="btn btn-danger">Uninstall App</button>
+                    {% if show == 'all_perms' %}<a href="/application/{{ device }}/{{ app_type }}/danger_perms/{{ package }}"  data-title="show" name="action" value="show"  class="btn btn-danger"> Show dangerous permissions Only </a>
+                    {% else %} <a href="/application/{{ device }}/{{ app_type }}/all_perms/{{ package }}"  data-title="show" name="action" value="show"  class="btn btn-danger"> Show all permissions</a> {% endif %}
                 </div>
-                <!-- /.modal-content -->
             </div>
         </div>
+    </div>
 
+    >
 
-        <div class="modal fade" id="uninstall_modal" role="dialog" >
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title " id="uninstall_modal_title"> <div class=" text-center">Uninstall</div></h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="alert alert-danger"><span class="glyphicon glyphicon-warning-sign"></span> Are you sure you want to uninstall this application?</div>
-
-                    </div>
-                    <div class="modal-footer ">
-                        <button type="submit"  name="action" value="uninstall" class="btn btn-success" > Yes </button>
-                        <button type="button" class="btn btn-default" data-dismiss="modal"> No </button>
-                    </div>
+    <div class="modal fade" id="revoke_modal" role="dialog" >
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title " id="revoke_modal_title"> <div class=" text-center">Revoke selected permissions</div></h4>
                 </div>
-                <!-- /.modal-content -->
+                <div class="modal-body">
+                    <div class="alert alert-danger"><span class="glyphicon glyphicon-warning-sign"></span> Are you sure you want to revoke selected permissions?</div>
+
+                </div>
+                <div class="modal-footer ">
+                    <button type="submit"  name="action" value="revoke"  class="btn btn-success" > Yes </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal"> No </button>
+                </div>
             </div>
+            <!-- /.modal-content -->
         </div>
-    </form>
+    </div>
+
+
+    <div class="modal fade" id="uninstall_modal" role="dialog" >
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title " id="uninstall_modal_title"> <div class=" text-center">Uninstall</div></h4>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-danger"><span class="glyphicon glyphicon-warning-sign"></span> Are you sure you want to uninstall this application?</div>
+
+                </div>
+                <div class="modal-footer ">
+                    <button type="submit"  name="action" value="uninstall" class="btn btn-success" > Yes </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal"> No </button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+    </div>
+</form>
 </div>
 {% endblock %}
